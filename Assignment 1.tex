@@ -1,0 +1,459 @@
+\documentclass[]{article}
+
+% Mathematics packages
+\usepackage{amsmath, amsfonts, amssymb, dsfont}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{fontawesome5}
+
+\usepackage{arydshln} 
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{animate}
+
+
+% Graphics and Figures
+\usepackage{graphicx, adjustbox, float, xcolor}
+
+% TikZ and PGFPLOTS
+\usepackage{tikz, pgfplots}
+\pgfplotsset{compat=1.17}
+
+\usetikzlibrary{arrows.meta, automata, positioning, decorations.pathreplacing, decorations.markings}
+\allowdisplaybreaks[2]
+
+% Formatting
+\usepackage{booktabs, enumitem, caption}
+
+\newcommand{\sgn}{\text{sgn}}
+
+\pagestyle{fancy}
+\setlength{\headheight}{14.5pt} % Ensure enough space for header
+\setlength{\textheight}{24.5cm} % Ensures body text fits well
+
+\setlength{\topmargin}{-2cm} % Moves everything up
+
+\lhead{Ben Vickers - 304024}
+\rhead{Mathematical Biology Assignment 1}
+\setlength{\headsep}{0.4cm} % Adds a gap between header and body text
+
+
+
+\title{\textbf{Mathematical Biology Assignment 1}}
+\author{Ben Vickers - 304024}
+\date{\textbf{Due: 7:59 PM, Thursday 16 October 2025}}
+
+\begin{document}
+	
+	\maketitle
+\noindent \textbf{Question}
+
+\vspace{1em}
+
+The growth rate of a fish species at time $t$ is described by the equation
+\[
+\frac{dg}{dt} = c g^{1/2}(t) - a g(t),
+\]
+\indent where $c$ and $a$ are positive constants. The initial condition is $g(0) = g_0$ (the \indent initial size), where $g_0$ is a positive constant.\newline
+
+\noindent \textbf{(a)} Without solving the differential equation, determine lim$_{t\to \infty}\, g(t) $.\newline
+
+\noindent \textbf{SOLUTION:}\newline
+
+To determine lim$_{t\to \infty}\, g(t) $, we can find the stable steady state(s) of $g(t)$.
+
+\[
+\frac{dg}{dt} = c g^{1/2}(t) - a g(t) \implies f(g) =c g^{1/2} - a g 
+\]
+
+Let $g^*$ be a steady state, then we have $f(g^*) = 0 \iff c {g^*}^{1/2} - a g^* =0 $ 
+
+Solving for $g^*$ we have:
+
+\[
+{g^*}^{1/2} \left(c - a {g^*}^{1/2}\right) = 0
+\]
+
+Which gives two roots:
+
+\[
+\begin{aligned}
+\displaystyle &{g^*_1}^{1/2} = 0 &&\implies \displaystyle g^*_1 = 0 \\
+\displaystyle &c - a {g^*_2}^{1/2} = 0 \implies \displaystyle {g^*_2}^{1/2} = \frac{c}{a} &&\implies \displaystyle g^*_2 = \left(\frac{c}{a}\right)^2
+\end{aligned}
+\]
+
+We have determined there are two steady states: $g^*_1 = 0\, , \, g^*_2 = \left(\frac{c}{a}\right)^2$. \newline
+
+To determine lim$_{t\to \infty}\, g(t) $, we check which of these steady states is stable.\newline
+
+Notice:
+\[
+f(g) =c g^{1/2} - a g  \implies f'(g) = \frac{c}{2g^{1/2}} - a
+\]
+
+However, attempting to evaluate $f'(g)$ at $g^*_1$ yields:
+
+\[
+f'(g^*_1) = \left[{\frac{c}{2\cdot \sqrt{g^*_1}} - a}\right]_{g^*_1 = 0} = \frac{c}{0} - a
+\]
+
+As this is clearly not defined, we can employ a graphical approach to evaluate \indent the eigenvalue of $g^*_1$ from its right-sided limit:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{f(g).png}
+    \caption{$f(g) =c g^{1/2} - a g  $; a=2 \, c=4}
+    \label{fig:f(g)}
+\end{figure}
+Inspecting the gradient of $f(g)$ about both steady states, we can clearly \indent notice that:
+
+\[
+\left. \frac{df(g)}{dg} \right|_{g=0^{+}} > 0 \, \text{ and } \, \left. \frac{df(g)}{dg} \right|_{g=\frac{c^2}{a^2}} < 0
+\]
+
+Specifically:
+
+\[
+\left. \frac{df(g)}{dg} \right|_{g=\frac{c^2}{a^2}} = \left[{\frac{c}{2\cdot \sqrt{g^*_2}} - a}\right]_{g^*_2 = \frac{c^2}{a^2}} = \frac{c}{2 \cdot \frac{c}{a} } - a = \frac{a}{2} -\frac{2a}{2} = - \frac{a}{2}  < 0.
+\]
+
+Therefore, we can conclude that $g^*_1 = 0$ is an unstable steady state, and \indent $g^*_2 = \frac{c^2}{a^2}$ is a stable steady state.\newline
+
+I.e. because we have shown that $g^*_2 = \frac{c^2}{a^2}$ is a (and the only) stable steady \indent state of the system, we have:
+\[
+\text{lim}_{t\to \infty}\, g(t) = \frac{c^2}{a^2} := g^* \quad \Box
+\]
+
+Notice that since we are given $a, c \, > 0 \implies g^* > 0$ and therefore, our \indent solution is biologically valid. \newline
+
+\noindent \textbf{(b)} Now solve the differential equation explicitly to find
+\[
+g(t) = \frac{1}{a^2} \left( c - \big(c - a g_0^{1/2}\big) e^{-at/2} \right)^2.
+\]
+
+\noindent \textbf{SOLUTION:}\newline
+
+As hinted, we begin by making the substitution $g(t) = h^2(t)$ which yields:
+
+\[
+\frac{dg(t)}{dt} = 2h(t)\frac{dh(t)}{dt}
+\]
+
+So we have:
+
+\[
+\frac{dg(t)}{dt} =  c g^{1/2}(t) - a g(t) = c h(t) -ah^2(t) = 2h(t)\frac{dh(t)}{dt}
+\]
+
+As we observed in Figure 1 for $f(g) = g'$:
+\[
+\begin{cases}
+    f(g) > 0 \quad ;&g\in(0,g^*)\\
+    f(g) < 0  \quad ;& g \in (g^*,\infty)
+\end{cases} \implies  \begin{cases}
+    g' > 0 \implies g(t) \in [g_0,g^*] \quad ;& 0<g_0 < g^* \\
+    g ' < 0 \implies g(t) \in [g^* , g_0] \quad ;& 0<g^*<g_0
+\end{cases}: t\geq 0 \]
+\[\implies g(t) \geq \min\{g_0,g^*\} > 0 \, \forall t \geq 0  \implies g(t) \neq 0 \implies h(t) \neq 0.
+\]
+
+%Notice that since $g'(t) > 0 \mid g(t) \in (0,\frac{c^2}{a^2}) \, , \, g'(t) < 0 \mid g(t) \in (\frac{c^2}{a^2},\infty) \implies $%
+%Since $f(g)$ has unique roots at $g=0, g=\frac{c^2}{a^2}, \, f$, must either be strictly increasing or decreasing on $g\in (0,\frac{c^2}{a^2}) \cup(\frac{c^2}{a^2},\infty)$  
+%$a,c,g_0 > 0 \implies  g(t) \geq \min\{g_0,g^*\}>0$%
+
+%$g(t) \neq 0 \implies h(t) \neq 0$:%
+Therefore, we can divide through by $h(t)$.
+\[
+c h(t) -ah^2(t) = 2h(t)\frac{dh(t)}{dt} \implies c - ah(t) = 2\frac{dh(t)}{dt}
+\]
+
+Applying separation of variables, we have:
+
+\[
+dt = -2 \frac{dh(t)}{ah(t)-c}
+\]
+
+Integrating this expression then yields:
+
+\[
+\int{dt} = -2\int{\frac{dh(t)}{ah(t)-c}}
+\]
+
+\[
+\implies t = -\frac{2}{a} \, \text{ln}\left|ah(t)-c\right| + \text{ln(k)}
+\]
+
+\[
+\implies -\frac{at}{2} = \text{ln}\left|ah(t)-c\right| + \text{ln(k)}
+\]
+
+\[
+\implies e^{-\frac{at}{2}} = k\cdot (ah(t)-c)
+\]
+
+Substituting $g(t) = h^2(t)\implies h(t) = \sqrt{g(t)}$ into our current expression:
+
+\[
+e^{-\frac{at}{2}} = k\cdot (a \sqrt{g(t)}-c)
+\]
+
+Now we can apply initial conditions ($t=0$) to find $k$ by evaluating:
+
+\[
+\left. e^{-\frac{at}{2}} \right|_{t=0} = \left.  k\cdot (a \sqrt{g(t)}-c) \right|_{t=0}
+\]
+
+\[
+\implies 1 = k \cdot (a \sqrt{g_0}-c)
+\]
+
+\[
+\implies k = \frac{1}{a \sqrt{g_0}-c}
+\]
+
+Substituting this value of $k$ back into our expression yields:
+
+\[
+e^{-\frac{at}{2}} = \left(\frac{1}{a \sqrt{g_0}-c}\right)\cdot (a \sqrt{g(t)}-c)
+\]
+
+Now, solving for $g(t)$:
+
+\[
+\left(a \sqrt{g_0}-c\right)e^{-\frac{at}{2}} = a \sqrt{g(t)}-c
+\]
+
+\[
+\implies \left(c - a \sqrt{g_0}\right)e^{-\frac{at}{2}} = c - a \sqrt{g(t)}
+\]
+
+\[
+\implies c - \left(c - a \sqrt{g_0}\right)e^{-\frac{at}{2}} = a \sqrt{g(t)}
+\]
+
+\[
+\implies \frac{1}{a}\left(c - \left(c - a \sqrt{g_0}\right)e^{-\frac{at}{2}}\right) =  \sqrt{g(t)}
+\]
+
+\[
+\implies \frac{1}{a^2}\left(c - \left(c - a \sqrt{g_0}\right)e^{-\frac{at}{2}}\right)^2 = g(t) \quad \Box
+\]
+
+This matches the form of the proposed solution to this differential equation.\newline
+
+We can also notice that since our solution is in the form of a product \indent of squares, this means $g(t) > 0 \, \forall t \in [0,\infty)$ which confirms the solutions' \indent biological validity.\newline
+
+
+\noindent \textbf{(c)} Verify that the equilibrium solution $g = \tfrac{c^2}{a^2}$ satisfies the differential equation.\newline
+
+\noindent \textbf{SOLUTION:}\newline
+
+Evaluating (LHS), if $g(t) = g = \tfrac{c^2}{a^2}$, then we have:
+
+\[
+\frac{dg}{dt} = \frac{d}{dt}\left( \frac{c^2}{a^2}\right) = 0
+\]
+
+Evaluating (RHS), if $g(t) = g = \tfrac{c^2}{a^2}$, then we have:
+\[
+ g^{1/2}(t) = \left(\frac{c^2}{a^2}\right)^{1/2} = \frac{c}{a}
+\]
+\[
+\implies c g^{1/2}(t) - a g(t)= c \left(\frac{c}{a}\right) - a\left( \frac{c^2}{a^2}\right)
+\]
+\[
+= \frac{c^2}{a} - \frac{c^2}{a} = 0
+\]
+
+I.e. (LHS) = 0 = (RHS) confirming that the equilibrium solution $g = \tfrac{c^2}{a^2}$ \indent satisfies the differential equation. $\quad \Box$ \newline
+
+
+\noindent \textbf{(d)} Determine the value of $g(t)$ when $t = 0$ using the initial condition.\newline
+
+\noindent \textbf{SOLUTION:}\newline
+
+Applying our obtained solution to this system, and evaluating at $t=0$, we \indent have:
+\[
+\left. g(t)\right|_{t=0} = \left. \frac{1}{a^2}\left(c - \left(c - a \sqrt{g_0}\right)e^{-\frac{at}{2}}\right)^2 \right|_{t=0}
+\]
+
+\[
+\implies g(0) = \frac{1}{a^2}\left(c - \left(c - a \sqrt{g_0}\right)e^{-\frac{a\cdot 0}{2}}\right)^2 
+\]
+\[
+= \frac{1}{a^2}\left(c - \left(c - a \sqrt{g_0}\right)\right)^2 =\frac{1}{a^2} \left(a \sqrt{g_0}\right)^2  =\frac{1}{a^2} \cdot a^2 \cdot g_0 = g_0 
+\]
+
+I.e. we have confirmed that our solution for $g(t)$ respects the given initial \indent condition: $\left.g(t)\right|_{t=0} = g(0) = g_0.\quad \Box $ \newline
+
+\noindent \textbf{(e)} Find the time $t$ when the population size $g(t)$ reaches half of its equilibrium value.\newline
+
+\noindent \textbf{SOLUTION:}\newline
+
+We aim to solve the following equation for $t$:
+\[
+g(t) = \frac{1}{2} \cdot \frac{c^2}{a^2}
+\]
+
+We will need to be careful about how we approach this to ensure we don't \indent get any biologically invalid solutions.\newline
+
+We can start with this stage of our working from (b):
+
+\[
+\left(a \sqrt{g_0}-c\right)e^{-\frac{at}{2}} = a \sqrt{g(t)}-c \to \left(a \sqrt{g_0}-c\right)e^{-\frac{at}{2}} = a \sqrt{\frac{g^*}{2}}-c
+\]
+\[
+\implies \left(a \sqrt{g_0}-c\right)e^{-\frac{at}{2}} = a \sqrt{\frac{c^2}{2a^2}}-c
+\]
+
+We can now solve this for $t$:
+\[ \left(a \sqrt{g_0}-c\right)e^{-\frac{at}{2}} = \frac{c}{\sqrt{2}}-c
+\]
+
+\[
+\implies e^{-\frac{at}{2}} = \frac{\frac{c}{\sqrt{2}}-c}{ \left(a \sqrt{g_0}-c\right)} = \frac{c-\frac{c}{\sqrt{2}}}{ \left(c-a \sqrt{g_0}\right)}
+\]
+
+To ensure a valid solution, we need to notice that $e^{-\frac{at}{2}} > 0 \, \forall \, t$. Therefore, \indent we must have:
+
+\[
+\frac{c-\frac{c}{\sqrt{2}}}{ \left(c-a \sqrt{g_0}\right)} = \frac{c(1-\frac{1}{\sqrt{2}})}{ \left(c-a \sqrt{g_0}\right)}> 0
+\]
+
+Since $c > 0\, , 1-\frac{1}{\sqrt{2}}>0 \implies c(1-\frac{1}{\sqrt{2}})>0$. So our condition requires:
+\[
+\left(c-a \sqrt{g_0}\right) > 0 \iff g_0 < g^*
+\]
+
+Next, because we only consider $t\in[0,\infty)$ to model a biologically valid \indent system, on this domain we will have $0 <e^{-\frac{at}{2}} \leq 1$.\newline
+
+The lower bound has been ensured by the condition $g_0 < g^*$. \newline
+
+Now we check what conditions must be imposed to ensure $e^{-\frac{at}{2}} \leq 1$:
+
+\[
+e^{-\frac{at}{2}}  = \frac{c-\frac{c}{\sqrt{2}}}{ \left(c-a \sqrt{g_0}\right)} \leq 1
+\]
+
+Because we have conditioned $g_0 < g^* \iff \left(c-a \sqrt{g_0}\right) > 0 $, our inequality \indent is unaffected by multiplication through by the denominator.
+
+\[
+\implies c-\frac{c}{\sqrt{2}} \leq c-a \sqrt{g_0}
+\]
+\[
+\implies \frac{c}{\sqrt{2}} \geq a \sqrt{g_0} \implies \frac{c^2}{2a^2} = \frac{g^*}{2}\geq g_0 
+\]
+
+So we have $g_0 \in \left(0,\frac{g^*}{2}\right]$ as our condition to ensure the solution, $t$ remains \indent biologically valid.\newline
+
+Note the following:\begin{enumerate}
+    \item If $g_0 = \frac{g^*}{2}$ then $t=0$ (this will be a result of the following form of $t$, and is trivial.
+    \item If $g_0 \in (\frac{g^*}{2}, g^*)$ then whilst the solution for $t$ will exist, it requires $t<0$ which is biologically invalid.
+    \item If $g_0 \in \left[g^*, \infty\right)$ then $g > g^* \, \forall t \implies \not\exists \, t \in \left[ 0,\infty\right) $ such that $g(t) = \frac{g^*}{2}$. 
+\end{enumerate}
+
+We can now proceed to solve for $t$ given our imposed conditions:
+
+\[
+e^{-\frac{at}{2}}  = \frac{c(1-\frac{1}{\sqrt{2}})}{ \left(c-a \sqrt{g_0}\right)}
+\]
+\[
+\implies e^{-\frac{at}{2}}=\frac{1 -  \frac{1}{\sqrt{2}}}{ \left(1 - \frac{a}{c} \sqrt{g_0}\right)}
+\]
+
+\[
+\implies   -\frac{at}{2}= \text{ln}\left( \frac{1 -  \frac{1}{\sqrt{2}}}{ \left(1 - \frac{a}{c} \sqrt{g_0}\right)} \right)
+\]
+
+\[
+\implies t = \frac{2}{a}\,\text{ln}\left( \frac{1 - \frac{a}{c} \sqrt{g_0}}{1 -  \frac{1}{\sqrt{2}}} \right)\quad;\, g_0 \in \left(0,\frac{g^*}{2}\right] \quad \Box
+\]
+
+Figure 2 demonstrates the accuracy of this solution.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{ass1e.png}
+    \caption{Intersection of $g(t)$ and half of the equilibrium value; $a=2 ,\, c=4$}
+    \label{fig:f(g)}
+\end{figure}
+
+\noindent \textbf{(f)} Discuss the effect of increasing the parameter $a$ on the long-term behaviour of $g(t)$.\newline
+
+\noindent \textbf{SOLUTION:}\newline
+
+\noindent \textbf{1)} Decreased Equilibrium \newline
+
+The first effect of increasing $a$ on the long-term behaviour of $g(t)$ is a \indent decrease in the equilibrium value. \newline
+
+We have shown that the stable steady state / equilibrium of $g(t) = \frac{c^2}{a^2} = \indent g^*>0$. \newline
+
+Therefore, if $a \to ma \, , \, m>0$, then:
+\[g^* = \frac{c^2}{a^2} \to \frac{c^2}{(ma)^2} =\frac{1}{m^2} \left(\frac{c^2}{a^2}\right) = \frac{1}{m^2} \cdot g^* \]
+
+I.e. increasing $a$ by a factor of $m$ will decrease the equilibrium by a factor \indent of $m^2$.\newline
+
+\noindent \textbf{2)} Decreased recovery time. \newline
+
+The second effect of increasing $a$ on the long-term behaviour of $g(t)$ is the \indent system will experience a decrease in the recovery time.\newline
+
+As we saw previously, 
+\[
+f'(g^{*})=-\frac{a}{2} \implies T_R\left(\frac{c^2}{a^2} \right) = \mathcal{O}\left(\frac{1}{f'(g^*)} \right) =  \mathcal{O}\left(-\frac{2}{a} \right) = \frac{2}{a}
+\]
+
+So, as $a$ increases, the Recovery Time will decrease, inversely to $a$.\newline
+
+\noindent \textbf{3)} Increased equilibrium convergence rate. \newline
+
+By evaluating:
+\begin{align*}
+|\displaystyle g(t)-g^{*}|
+&=\left|\frac{1}{a^{2}}\Big(c-\big(c-a\sqrt{g_{0}}\big)e^{-\frac{a}{2}t}\Big)^{2}-\frac{c^{2}}{a^{2}} \right|\\[2pt]
+&=\left|\frac{1}{a^{2}}\left[-2c\big(c-a\sqrt{g_{0}}\big)e^{-\frac{a}{2}t}+\big(c-a\sqrt{g_{0}}\big)^{2}e^{-a t}\right]\right| \\[2pt]
+& \leq \frac{1}{a^{2}}\left|\left[-2c\big(c-a\sqrt{g_{0}}\big)e^{-\frac{a}{2}t} \right] \right| + \frac{1}{a^{2}}\left| \left[\big(c-a\sqrt{g_{0}}\big)^{2}e^{-a t}\right]\right| \\[2pt]
+&= \frac{2c\left|c-a\sqrt{g_{0}}\right|}{a^{2}}e^{-\frac{a}{2}t} + \frac{\big(c-a\sqrt{g_{0}}\big)^{2}}{a^{2}}\left( e^{-a t}\right) \\[2pt]
+& \leq \frac{2c\left|c-a\sqrt{g_{0}}\right|}{a^{2}}e^{-\frac{a}{2}t} + \frac{\big(c-a\sqrt{g_{0}}\big)^{2}}{a^{2}}\left(e^{-\frac{a}{2}t}\right) \\[2pt]
+& = \frac{2c\left|c-a\sqrt{g_{0}}\right| + \big(c-a\sqrt{g_{0}}\big)^{2}}{a^{2}}e^{-\frac{a}{2}t} \\[2pt]
+& =C_a(c,g_0) e^{-\frac{a}{2}t} \to 0.
+\end{align*}
+\indent we can see that $g^*$ is exponentially stable with convergence rate $\frac{a}{2}$ and \indent therefore, by increasing $a$, the rate at which $g(t)$ converges to $g^*$ increases.\newline
+\linebreak
+\noindent\textbf{4)} Change of trajectory direction towards $g^*$.\newline
+
+As we observed in (b):
+\[
+\left(a \sqrt{g_0}-c\right)e^{-\frac{at}{2}} = \left(a \sqrt{g(t)}-c\right)
+\]
+
+So we have that:
+\[
+g'(t) = \sqrt{g(t)}\left(c-a\sqrt{g(t)}\right) = -\sqrt{g(t)}\left(a\sqrt{g(t)}-c\right) 
+\]
+\[= -\underbrace{\sqrt{g(t)}}_{>0}\left(\left(a \sqrt{g_0}-c\right)\underbrace{e^{-\frac{at}{2}}}_{>0} \right)\]
+
+That is to say:
+\[
+\sgn\left(g'(t)\right) = -\sgn\left(a-\sqrt{g_0} c\right) = \begin{cases}
+    1 & ;\, a < \frac{c}{\sqrt{g_0}} \\
+    -1 & ;\, a > \frac{c}{\sqrt{g_0}}
+\end{cases} \quad : \forall \, t \in [0,\infty)
+\]
+
+Meaning $g(t)$ is monotone on $[0,\infty)$ and given fixed values for $c$ and $g_0$, $g$ \indent will approach $g^* = \frac{c^2}{a^2}$ from either above, or below depending on $a$. I.e. by \indent increasing $a$, $g(t)$ will eventually become a strictly decreasing function that \indent approaches $g^*$ from above.\newline
+
+\noindent \textbf{Conclusion}\newline
+{\par\leftskip=\parindent \parindent=0pt \rightskip=0pt plus 1fil
+We have shown in f$(1,2,3,4)$ that as the parameter $a$ increases, $g(t)$ will approach an increasingly smaller equilibrium value, $g^* = \frac{c^2}{a^2}$ at an increasingly faster rate with decreasing recovery time, and, once $a$ increases beyond a certain point ($\frac{c}{\sqrt{g_0}}$), $g(t)$ will become a decreasing function, approaching $g^*$ from above. $\quad \Box$\par}
+
+\hrulefill 
+
+
+
+\end{document}
+
+
